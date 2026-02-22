@@ -1,73 +1,49 @@
-# React + TypeScript + Vite
+# 🚐 Jeepney Route Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> A modern, mobile-first web application designed to help commuters navigate local jeepney routes in Davao City efficiently.
 
-Currently, two official plugins are available:
+This interactive map application provides real-time route suggestions, fare estimates, and walking directions, ensuring a seamless commuting experience.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## ✨ Key Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+* **🗺️ Interactive Map:** View all jeepney routes overlaid on OpenStreetMap.
+* **🚶 Walking Directions:** Turn-by-step directions to the nearest boarding and alighting points.
+* **🚐 Route Suggestions:** Clear, smart recommendations on which jeepney to ride, including necessary transfers.
+* **💰 Fare & Time Estimates:** Know your expected travel time and how much you'll pay before you ride.
+* **📱 Mobile-Optimized:** A mobile-first interface designed for commuters on the go.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🔍 Feature Breakdown
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+| Feature | Description |
+| :--- | :--- |
+| **🗺️ Interactive Map** | View all jeepney routes overlaid seamlessly on OpenStreetMap. |
+| **🔍 Smart Search** | Search destinations by landmark, address, or your current location. |
+| **🚌 Route Suggestions** | Get recommended jeepney routes, including multi-ride transfers. |
+| **🚶 Walking Directions** | Get step-by-step guidance to boarding and alighting points. |
+| **💰 Fare Estimates** | Calculate expected trip costs before getting on the jeepney. |
+| **⏱️ Time Estimates** | View estimated travel times for your entire journey. |
+| **📱 Mobile-First UI** | Optimized specifically for phone screens where commuters need it most. |
+| **🔄 Real-Time Sync** | Routes and data update instantly via the Convex backend. |
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 🛠️ Tech Stack
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Frontend
+| Technology | Purpose |
+| :--- | :--- |
+| **React 18** | Core UI framework |
+| **TypeScript** | Type-safe JavaScript for robust code |
+| **Vite** | Lightning-fast build tool & dev server with HMR |
+| **Tailwind CSS** | Utility-first styling for rapid UI development |
+| **shadcn/ui** | Pre-built, customizable, and accessible UI components |
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### Backend
+| Technology | Purpose |
+| :--- | :--- |
+| **Convex** | Serverless backend & real-time database |
+| **Convex Functions** | Server-side queries & mutations |
