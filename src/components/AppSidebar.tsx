@@ -41,13 +41,21 @@ import { useQuery, useMutation } from "convex/react";
 import { SearchInput, type PlaceResult } from "./SearchInput";
 import { api } from "../../convex/_generated/api.js";
 import { DAVAO_ROUTES } from "@/data/routes/all-routes";
+import type { MapDestination } from "@/App";
 
 interface AppSidebarProps {
   userLocation: [number, number] | undefined; // [lng, lat]
   onRouteFound: (result: RouteSuggestion | null) => void;
+  mapDestination?: MapDestination | null;
+  onClearDestination?: () => void;
 }
 
-export function AppSidebar({ userLocation, onRouteFound }: AppSidebarProps) {
+export function AppSidebar({
+  userLocation,
+  onRouteFound,
+  mapDestination,
+  onClearDestination,
+}: AppSidebarProps) {
   // ── Search form state ────────────────────────────────────────────────
   const [startingPoint, setStartingPoint] = useState("");
   const [destination, setDestination] = useState("");
@@ -58,6 +66,24 @@ export function AppSidebar({ userLocation, onRouteFound }: AppSidebarProps) {
   // Cached coordinates from autocomplete selection
   const startCoordsRef = useRef<Coordinate | null>(null);
   const destCoordsRef = useRef<Coordinate | null>(null);
+
+  // ── Auto-fill destination from map click ──────────────────────────────
+  const lastConsumedRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (
+      mapDestination &&
+      mapDestination.placeName !== "Loading..." &&
+      lastConsumedRef.current !== mapDestination.placeName
+    ) {
+      lastConsumedRef.current = mapDestination.placeName;
+      setDestination(mapDestination.placeName);
+      destCoordsRef.current = mapDestination.coordinates;
+      setError(null);
+      // Clear the suggestion so user can find a new route
+      setSuggestion(null);
+      onRouteFound(null);
+    }
+  }, [mapDestination, onRouteFound]);
 
   // ── Convex routes ────────────────────────────────────────────────────
   const allRoutesRaw: any[] = useQuery((api as any).jeepneyRoutes.getAll) ?? [];
@@ -219,6 +245,8 @@ export function AppSidebar({ userLocation, onRouteFound }: AppSidebarProps) {
   const handleClearRoute = () => {
     setSuggestion(null);
     onRouteFound(null);
+    onClearDestination?.();
+    lastConsumedRef.current = null;
   };
 
   return (

@@ -1,7 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "leaflet/dist/leaflet.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -129,10 +128,68 @@
   body {
     @apply bg-background text-foreground;
   }
+  .maplibregl-popup-content {
+    @apply bg-transparent! shadow-none! p-0! rounded-none!;
+  }
+  .maplibregl-popup-tip {
+    @apply hidden!;
+  }
+  .maplibregl-canvas {
+    @apply outline-none! transition-all duration-500;
+  }
+
+  /* In dark mode, invert the highly-detailed light map (Voyager) and rotate hue 
+     so that water stays blue and parks stay green, but the background gets dark!
+     This keeps ALL malls, POIs, and labels 100% visible and opaque. */
+  .dark .maplibregl-map .maplibregl-canvas {
+    filter: invert(100%) hue-rotate(180deg) brightness(35%) contrast(35%);
+  }
+
+  /* Since the whole canvas is inverted in dark mode, we need to counter-invert 
+     our custom HTML markers so they stay their original colors (e.g., Red pin, Blue dot) */
+  .dark .maplibregl-marker {
+    filter: invert(100%) hue-rotate(180deg) saturate(1.5);
+  }
+
+  .maplibregl-map {
+    @apply bg-[#f2f4f1] dark:bg-[#1a1a1a];
+  }
 }
 
-/* Leaflet map fills its container */
-.leaflet-container {
-  height: 100%;
-  width: 100%;
+/* Custom animations for map interactions */
+@keyframes bounce-in {
+  0% {
+    transform: scale(0.3) translateY(-40px);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05) translateY(0);
+    opacity: 1;
+  }
+  70% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.animate-bounce-in {
+  animation: bounce-in 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55) both;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out 1.5s both;
 }

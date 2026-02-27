@@ -1,5 +1,5 @@
 // src/App.tsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { JeepneyMap } from "./components/JeepneyMap";
 import { AppSidebar } from "./components/AppSidebar";
 import {
@@ -9,11 +9,30 @@ import {
 } from "./components/ui/sidebar";
 import type { RouteSuggestion } from "./lib/routeFinder";
 
+export interface MapDestination {
+  coordinates: [number, number]; // [lng, lat]
+  placeName: string;
+}
+
 function App() {
   const [suggestion, setSuggestion] = useState<RouteSuggestion | null>(null);
   const [userLocation, setUserLocation] = useState<
     [number, number] | undefined
   >(undefined);
+  const [mapDestination, setMapDestination] = useState<MapDestination | null>(
+    null,
+  );
+
+  const handleMapClick = useCallback((dest: MapDestination) => {
+    setMapDestination(dest);
+    // Clear any existing suggestion when user picks new destination
+    setSuggestion(null);
+  }, []);
+
+  const handleClearDestination = useCallback(() => {
+    setMapDestination(null);
+    setSuggestion(null);
+  }, []);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -32,7 +51,12 @@ function App() {
   return (
     <SidebarProvider defaultOpen>
       {/* Left sidebar — search + route results */}
-      <AppSidebar userLocation={userLocation} onRouteFound={setSuggestion} />
+      <AppSidebar
+        userLocation={userLocation}
+        onRouteFound={setSuggestion}
+        mapDestination={mapDestination}
+        onClearDestination={handleClearDestination}
+      />
 
       {/* Main area — full-screen map */}
       <SidebarInset className="relative p-0 overflow-hidden">
@@ -41,7 +65,12 @@ function App() {
           <SidebarTrigger className="bg-white shadow-md rounded-xl border border-gray-100 hover:bg-gray-50 w-9 h-9" />
         </div>
 
-        <JeepneyMap userLocation={userLocation} suggestion={suggestion} />
+        <JeepneyMap
+          userLocation={userLocation}
+          suggestion={suggestion}
+          onMapClick={handleMapClick}
+          mapDestination={mapDestination}
+        />
       </SidebarInset>
     </SidebarProvider>
   );
